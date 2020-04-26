@@ -55,6 +55,7 @@ class TableLayoutElement extends LayoutElement {
         ),
         width: style.width,
         height: style.height,
+        margin: style.margin,
         child: Table(
           columnWidths: colWidths,
           children: children
@@ -118,8 +119,20 @@ class TableRowLayoutElement extends LayoutElement {
         children: children
             .map((c) {
               if (c is StyledElement && c.name == 'td' || c.name == 'th') {
+                Alignment alignment;
+                if(c.attributes.containsKey("style")) {
+                  if (c.attributes["style"].indexOf("left") > 0) {
+                    alignment = Alignment.centerLeft;
+                  } else if (c.attributes["style"].indexOf("right") > 0) {
+                    alignment = Alignment.centerRight;
+                  }
+                  else if (c.attributes["style"].indexOf("center") > 0) {
+                    alignment = Alignment.center;
+                  }
+                }
                 return TableCell(
                     child: Container(
+                        alignment: alignment,
                         padding: c.style.padding,
                         decoration: BoxDecoration(
                           color: c.style.backgroundColor,
